@@ -1,0 +1,51 @@
+import requests
+from bs4 import BeautifulSoup
+import csv
+import pandas as pd
+import lxml
+import html5lib
+
+#list of occupation+codes in this format:
+url_head = 'https://www.careeronestop.org/Toolkit/Careers/Occupations/occupation-profile.aspx?keyword='
+folder = '//FS01.cato.int/USERS/mhoward/Desktop/datasets'
+#read_excel = pd.read_excel('C:/Users/mhoward/OneDrive - Cato Institute/Mike/py_files') #PICK UP FROM HERE
+#occupation_list = read_excel['A'].tolist()
+
+occupation_list = ["Chief%20executives&location=united%20states&ajax=0&onetcode=11101100",
+"General%20and%20operations%20managers&location=united%20states&ajax=0&onetcode=11102100",
+"Legislators&location=united%20states&ajax=0&onetcode=11103100",
+"Advertising%20and%20promotions%20managers&location=united%20states&ajax=0&onetcode=11201100"]
+
+base_df = pd.DataFrame([], columns = ['job', 'programs'])
+for occupation in occupation_list:
+    try:
+        job = occupation[-8:]
+        print('   '+str(occupation_list.index(occupation))+' - '+job)
+        url = url_head+occupation
+        website_html = requests.get(url).text
+        soup = BeautifulSoup(website_html, 'html.parser')
+
+        #print(soup.prettify())
+
+        df = soup.find('ul', {'id':'programsThatPrepareYouList1Pane'}).findChildren("li", recursive=False)
+        start = '?keyword='
+        end = '&amp'
+
+        program_list = []
+        for x in range(0, len(df)):  
+            s = str(df[x])
+            program = (s.split(start))[1].split(end)[0]
+            print('      '+program)
+            program_list.append(program)
+
+        data = [[job, program_list]]
+        item = pd.DataFrame(data, columns = ['job', 'programs'])
+
+        base_df = base_df.append(item)
+        
+    except:
+        print('Error for {}'.format(job))
+        
+print('Done')
+
+base_df.to_csv(folder+'/occ_programs.csv')
