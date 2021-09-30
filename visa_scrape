@@ -32,7 +32,7 @@ for y in year_list:
                 url = url_head+month+"%20"+year+"%20-%20NIV%20Issuances%20by%20Nationality%20and%20Visa%20Class.pdf"
                 
             elif month == 'DECEMBER' and year == '2017':
-                url = url_head+"DECEMBER%202017%20-%20NIV%20Issuances%20by%20Nationlity%20and%20Visa%20Class.pdf"
+                url = url_head+"DECEMBER%202017%20-%20NIV%20Issuances%20by%20Nationlity%20and%20Visa%20Class.pdf" 
 
             elif month == 'OCTOBER' and year == '2019':
                 url = url_head+"OCTOBER%202019%20NIV%20Issuances%20by%20Nationality%20and%20Visa%20Class.pdf"
